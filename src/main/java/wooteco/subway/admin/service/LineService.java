@@ -75,7 +75,8 @@ public class LineService {
         return WholeSubwayResponse.of(lineDetailResponses);
     }
 
-    public ShortestDistanceResponse searchShortestDistancePath(String source, String target) {
+    public ShortestDistanceResponse searchShortestDistancePath(String source, String target,
+        String type) {
         Station sourceStation = stationRepository.findByName(source)
             .orElseThrow(RuntimeException::new);
         Station targetStation = stationRepository.findByName(target)
@@ -84,7 +85,7 @@ public class LineService {
         List<Line> lines = lineRepository.findAll();
         Path path = new Path(lines);
 
-        List<Long> stationIds = path.searchShortestDistancePath(sourceStation, targetStation);
+        List<Long> stationIds = path.searchShortestPath(sourceStation, targetStation, type);
         int distance = path.calculateDistance(stationIds);
         int duration = path.calculateDuration(stationIds);
         return new ShortestDistanceResponse(StationResponse.listOf(toStations(stationIds)),
